@@ -20,4 +20,4 @@ Este é o sistema oficial de agendamento e portfólio para a profissional Karol 
 Distribuído sob a **Licença Apache 2.0**. Consulte o arquivo `LICENSE` para mais detalhes.
 
 ---
-Desenvolvido por **Kovaliosky DeV** para **Visual Studio And Security**.
+Desenvolvido por **Kovaliosky DeV** e **Visual Studio And Security**.
