@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karol Design Profissional</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #faf8f6; color: #333; margin: 0; }
+    
+    .logo-neon {
+      color: #ff007f;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff66b2;
+      animation: neon-glow 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes neon-glow {
+      from { text-shadow: 0 0 10px #ff007f; }
+      to { text-shadow: 0 0 20px #ff66b2, 0 0 30px #ff99cc; }
+    }
+
+    .slogan {
+      font-family: 'Great Vibes', cursive;
+      color: #8B4789;
+      font-size: 1.5rem;
+    }
+
+    .btn-primary { background: #8B4789; color: #fff; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; transition: 0.3s; }
+    .btn-primary:hover { background: #ff007f; transform: translateY(-2px); }
+    
+    .tab-btn { padding: 15px; border: none; background: transparent; cursor: pointer; border-radius: 12px; color: #64748b; flex: 1; display: flex; justify-content: center; transition: 0.3s; }
+    .tab-btn.active { background: #8B4789; color: #fff !important; box-shadow: 0 4px 12px rgba(139, 71, 137, 0.2); }
+    
+    .form-card { background: #fff; border-radius: 24px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto; border: 1px solid #fceef5; }
+    input, select { width: 100%; padding: 14px; margin: 8px 0 18px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; outline-color: #ff007f; }
+    
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+    .gallery-item { aspect-ratio: 1; border-radius: 15px; overflow: hidden; position: relative; border: 1px solid #eee; background: #fff; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .delete-btn { position: absolute; top: 8px; right: 8px; background: rgba(220, 38, 38, 0.9); color: white; border: none; padding: 6px; border-radius: 50%; cursor: pointer; z-index: 10; }
+  </style>
+ </head>
+ <body class="h-full overflow-auto">
+  
+  <header class="bg-white border-b sticky top-0 z-50 py-6 px-4 text-center">
+    <div class="max-w-xl mx-auto">
+      <h1 class="text-3xl font-bold logo-neon">Karol Design Profissional</h1>
+      <p class="slogan mt-1">A beleza que seus olhos merecem</p>
+      
+      <nav class="flex gap-2 mt-8 bg-gray-50 p-1.5 rounded-2xl">
+        <button id="btn-booking" onclick="showTab('booking')" class="tab-btn active"><i data-lucide="calendar"></i></button> 
+        <button id="btn-appointments" onclick="showTab('appointments')" class="tab-btn"><i data-lucide="clipboard-list"></i></button> 
+        <button id="btn-gallery" onclick="showTab('gallery')" class="tab-btn"><i data-lucide="camera"></i></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto p-6">
+    <div id="booking-tab" class="tab-content">
+      <div class="form-card">
+        <h2 class="text-center font-bold text-xl mb-6">Agendar Horário</h2>
+        <form onsubmit="handleBooking(event)">
+          <label class="text-xs font-bold uppercase text-gray-400 ml-1">Nome da Cliente</label>
+          <input type="text" id="client-name" placeholder="Ex: Ana Souza" required>
+          
+          <label class="text-xs font-bold uppercase text-gray-400 ml-1">Serviço</label>
+          <select id="service-select" required>
+            <option value="Design nos Cílios">Design nos Cílios</option>
+            <option value="Design nas Sobrancelhas">Design nas Sobrancelhas</option>
+            <option value="Limpeza de Pele">Limpeza de Pele</option>
+          </select>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-xs font-bold uppercase text-gray-400 ml-1">Data</label><input type="date" id="booking-date" required></div>
+            <div><label class="text-xs font-bold uppercase text-gray-400 ml-1">Hora</label><input type="time" id="booking-time" required></div>
+          </div>
+          
+          <button type="submit" id="submit-btn" class="btn-primary w-full justify-center mt-6 py-4">Confirmar Agendamento</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="appointments-tab" class="tab-content hidden">
+      <h2 class="font-bold text-xl mb-6 flex items-center gap-2"><i data-lucide="calendar-check"></i> Próximos Atendimentos</h2>
+      <div id="appointments-list" class="space-y-4"></div>
+    </div>
+
+    <div id="gallery-tab" class="tab-content hidden">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="font-bold text-xl">Meu Portfólio</h2>
+        <input type="file" id="media-input" accept="image/*" class="hidden" onchange="uploadPhoto(event)">
+        <button onclick="document.getElementById('media-input').click()" id="upload-btn" class="btn-primary text-sm">
+          <i data-lucide="plus-circle"></i> Adicionar Foto
+        </button>
+      </div>
+      <div id="gallery-grid" class="gallery"></div>
+    </div>
+  </main>
+
+  <script>
+    let dbData = [];
+
+    async function init() {
+      if (window.lucide) lucide.createIcons();
+      try {
+        if (window.dataSdk) {
+          await window.dataSdk.init({
+            onDataChanged: (data) => {
+              dbData = data || [];
+              render();
+            }
+          });
+        }
+      } catch (e) { console.error("Erro no Servidor:", e); }
+    }
+
+    window.addEventListener('load', init);
+
+    function render() {
+      const appList = document.getElementById('appointments-list');
+      const apps = dbData.filter(d => d.type === 'appointment');
+      appList.innerHTML = apps.length ? apps.map(a => `
+        <div class="bg-white p-5 rounded-2xl border flex justify-between items-center shadow-sm">
+          <div>
+            <p class="font-bold text-gray-800">${a.name}</p>
+            <p class="text-sm text-[#ff007f] font-semibold">${a.service}</p>
+            <p class="text-xs text-gray-400 mt-1">${a.date} às ${a.time}</p>
+          </div>
+          <button onclick="deleteItem('${a.id}')" class="text-gray-300 hover:text-red-500 transition"><i data-lucide="trash-2"></i></button>
+        </div>`).join('') : '<p class="text-center text-gray-400 py-10">Nenhum agendamento ativo.</p>';
+
+      const galGrid = document.getElementById('gallery-grid');
+      const photos = dbData.filter(d => d.type === 'photo');
+      galGrid.innerHTML = photos.map(p => `
+        <div class="gallery-item group">
+          <img src="${p.url}" loading="lazy">
+          <button onclick="deleteItem('${p.id}')" class="delete-btn"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>`).join('');
+      
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function handleBooking(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.innerText = "Agendando...";
+      btn.disabled = true;
+
+      await window.dataSdk.create({
+        type: 'appointment',
+        name: document.getElementById('client-name').value,
+        service: document.getElementById('service-select').value,
+        date: document.getElementById('booking-date').value,
+        time: document.getElementById('booking-time').value
+      });
+
+      btn.innerText = "Confirmar Agendamento";
+      btn.disabled = false;
+      e.target.reset();
+      showTab('appointments');
+    }
+
+    async function uploadPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const btn = document.getElementById('upload-btn');
+      btn.disabled = true;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const canvas = document.createElement('canvas');
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = async () => {
+          const max = 600;
+          let w = img.width, h = img.height;
+          if (w > max) { h *= max/w; w = max; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          await window.dataSdk.create({ type: 'photo', url: canvas.toDataURL('image/jpeg', 0.5) });
+          btn.disabled = false;
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function deleteItem(id) {
+      if (confirm("Remover permanentemente?")) {
+        const item = dbData.find(d => d.id === id);
+        if (item) await window.dataSdk.delete(item);
+      }
+    }
+
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id + '-tab').classList.remove('hidden');
+      document.getElementById('btn-' + id).classList.add('active');
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
+ </body>
+</html>
